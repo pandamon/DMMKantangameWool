@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DMM Kantangame Wool Lite
 // @namespace    https://www.youtube.com/watch?v=dQw4w9WgXcQ
-// @version      beta-1.0.0
+// @version      beta-1.0.1
 // @description  Always win DMM Kantangame game, score number is automatically generated and statistically reasonable 
 // @author       Pandamon
 // @match        https://pointclub.kantangame.com/easygame/game/*
@@ -527,7 +527,7 @@
             scoreInfo:{
                 type:"pick",
                 scoreParam:{
-                    winList:[1140,1144,1148,1152,1156,1160,1164,1168,1172,1176,1180,1184,1188,1192,1196,1200],
+                    winList:[1260, 1264, 1268, 1270, 1274, 1278, 1280, 1284, 1288, 1290, 1294, 1298, 1300, 1304, 1308, 1310, 1314, 1318, 1320, 1324, 1328, 1330, 1334, 1338, 1340, 1344, 1348, 1350, 1354, 1358],
                     loseList:[0,30]
                 }
             },
@@ -555,9 +555,9 @@
             "scoreInfo": {
                 "type": "interval",
                 "scoreParam": {
-                    "winScore": 39840,
-                    "loseScore": 26450,
-                    "limitScore": 47808,
+                    "winScore": 40240,
+                    "loseScore": 26630,
+                    "limitScore": 48288,
                     "singleTick": 1
                 }
             },
@@ -626,9 +626,9 @@
             "scoreInfo": {
                 "type": "interval",
                 "scoreParam": {
-                    "winScore": 5470,
+                    "winScore": 6850,
                     "loseScore": 200,
-                    "limitScore": 6564,
+                    "limitScore": 8220,
                     "singleTick": 1
                 }
             },
