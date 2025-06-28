@@ -1,4 +1,4 @@
-# KantangameWool
+# DMMKantangameWool
 
 Always win DMM Kantangame game, score number is automatically randomly generated and statistically reasonable
 
