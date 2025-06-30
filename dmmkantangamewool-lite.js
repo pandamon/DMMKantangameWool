@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DMM Kantangame Wool Lite
 // @namespace    https://www.youtube.com/watch?v=dQw4w9WgXcQ
-// @version      beta-1.0.1
+// @version      beta-1.0.2
 // @description  Always win DMM Kantangame game, score number is automatically generated and statistically reasonable 
 // @author       Pandamon
 // @match        https://pointclub.kantangame.com/easygame/game/*
@@ -12,6 +12,8 @@
 // @grant        GM_deleteValue
 // @grant        GM_listValues
 // @run-at       document-idle
+// @downloadURL  https://raw.githubusercontent.com/pandamon/DMMKantangameWool/refs/heads/main/dmmkantangamewool-lite.js
+// @updateURL    https://raw.githubusercontent.com/pandamon/DMMKantangameWool/refs/heads/main/dmmkantangamewool-lite.js
 
 // ==/UserScript==
 
