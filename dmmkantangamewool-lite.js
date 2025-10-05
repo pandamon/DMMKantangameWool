@@ -706,7 +706,7 @@
     unsafeWindow.clearGMstorage = clearGMstorage;
 
     let extractNumber = function(string){
-        return parseInt(string.match(/\d+/)[0]);
+       return parseInt(string.replace(/[^0-9]/g, ""));
     }
 
 
@@ -773,17 +773,34 @@
             }
             return 1;
         }; 
-        let extractRankingArray = function(rankingNodelist){
-            let rankingArray = [...new Set(Array.from(rankingNodelist, node => parseInt(node.innerHTML)))];
-            rankingArray = rankingArray.filter(item => !Number.isNaN(item));
+        let extractRankingArray = function (rankingNodelist) {
+            let rankingArray = [
+                ...new Set(
+                Array.from(rankingNodelist, (node) => {
+                    const cleanString = node.textContent.replace(/[^0-9]/g, "");
+                    return parseInt(cleanString);
+                })
+                ),
+            ];
+            rankingArray = rankingArray.filter((item) => !Number.isNaN(item));
             return rankingArray;
-        }
+        };
         let gameInfo = {};
         let gameid = getGameid(unsafeWindow.location.href);
-        let targetScoreNodeList = document.querySelectorAll("div.left_side_col > div.c-target-score > div.c-target-score__wrap > ul > li > div.c-target-score__score");
-        let rankingNodeList = document.querySelectorAll("div.gb-ranking_list.pad12 > div.gb-ranking_list_content.plus-list-loader > ul > li > p:nth-child(3)");
-        let winScore = parseInt(extractNumber(targetScoreNodeList[0].innerHTML));
-        let loseScore = parseInt(extractNumber(targetScoreNodeList[3].innerHTML));
+        let targetScoreNodeList = document.querySelectorAll(
+            "div.c-n-game-sec__body > ul.c-n-game-goal-score li.c-n-game-goal-score__score div"
+        );
+        const game_ranking = document.querySelectorAll(
+            "ul.c-n-game-ranking__l-list"
+        );
+        let rankingNodeList = [];
+        for (let i = 0; i < game_ranking.length; i++) {
+        rankingNodeList.push(
+            ...game_ranking[i].querySelectorAll("li > span:nth-of-type(2)")
+        );
+        }
+        let winScore = parseInt(extractNumber(targetScoreNodeList[0].textContent));
+        let loseScore = parseInt(extractNumber(targetScoreNodeList[3].textContent));
         let rankingArray = extractRankingArray(rankingNodeList);
         if(!targetScoreNodeList || rankingArray.length == 0){
             throw Error("Get game page error");
@@ -870,20 +887,40 @@
         }
     }
 
-    let hookPlusSendScore = function(gameid,outcome){
-        // hook Plus.sendScore function to send a random win game score
-        console.log("Plus.sendScore hooked for gameid: " + gameid);
-        let _sendScore = unsafeWindow.Plus.sendScore;
+    function customSendScore(gameid, outcome) {
+    const originalAjax = $.ajax;
+
+    $.ajax = function (...args) {
+      const options = args[0] || {};
+      const requestUrl = options.url || "";
+      if (
+        requestUrl.includes("/finish.json") &&
+        options.data &&
+        typeof options.data.score !== "undefined"
+      ) {
         let gameInfo = getGameInfo(gameid);
-        if(gameInfo == null){
-            gameInfo = makeGameInfo()[gameid];
-            saveGameInfo(gameid,gameInfo);
+        // console.log("Game info", gameInfo);
+        if (gameInfo == null) {
+          gameInfo = makeGameInfo()[gameid];
+          saveGameInfo(gameid, gameInfo);
         }
-        unsafeWindow.Plus.sendScore = function(score){
-            score = makeRandomScore(gameInfo.scoreInfo,outcome);
-            return _sendScore(score);
-        }
-    }
+        const score = makeRandomScore(gameInfo.scoreInfo, outcome);
+        // console.log("New Score", score);
+        options.data.score = score;
+        const shaObj = new jsSHA("SHA-1", "TEXT");
+        const hashString =
+          options.data.user_id +
+          options.data.media_id +
+          options.data.game_id +
+          options.data.score +
+          options.data.key;
+        shaObj.update(hashString);
+        options.data.hash = shaObj.getHash("HEX");
+      }
+
+      return originalAjax.apply(this, args);
+    };
+  }
 
     // main func
 
@@ -900,7 +937,7 @@
         // }
         // removeGameAd();
 
-        hookPlusSendScore(currentGameid,"win");
+        customSendScore(currentGameid,"win");
         return;
     }
     
