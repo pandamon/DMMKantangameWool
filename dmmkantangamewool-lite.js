@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         DMM Kantangame Wool Lite
 // @namespace    https://www.youtube.com/watch?v=dQw4w9WgXcQ
-// @version      beta-1.0.2
-// @description  Always win DMM Kantangame game, score number is automatically generated and statistically reasonable 
+// @version      beta-1.1.0
+// @description  Always win DMM Kantangame game, score number is automatically generated and statistically reasonable
 // @author       Pandamon
 // @match        https://pointclub.kantangame.com/easygame/game/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tampermonkey.net
@@ -28,670 +28,73 @@
     // unsafeWindow.GM = GM;
 
 
-    // game infomation dict example:
-    // const gameInfoDictExample = {
-    //     "0":{
-    //         gameid:"0",
-    //         scoreInfo:{
-    //             type:"interval",
-    //             scoreParam:{
-    //                 winScore:10000,
-    //                 loseScore:4000,
-    //                 limitScore:12000,
-    //                 singleTick:100
-    //             }
-    //         },
-    //         operationSequence:[], // to be refined
-    //         saveDataTemplate:{} // to be refined
-    //     },
-    //     "-1":{
-    //         gameid:"-1",
-    //         scoreInfo:{
-    //             type:"pick",
-    //             scoreParam:{
-    //                 winList:[27,30],
-    //                 loseList:[0]
-    //             }
-    //         },
-    //         operationSequence:[], // to be refined
-    //         saveDataTemplate:{} // to be refined
-    //     },
-    // }
-
-    const gameInfoDict = {
-        // need 30 games info
-        // 1
-        "50": {
-            "gameid": "50",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 8000,
-                    "loseScore": 2000,
-                    "limitScore": 9600,
-                    "singleTick": 1
+    // some special game info, not in gameInfoDict
+    const typePickGameInfoDict = {
+        // 37
+        "586": {
+            gameid: "586",
+            scoreInfo: {
+                type: "pick",
+                scoreParam: {
+                    winList: [1500],
+                    loseList: [0]
                 }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 2
-        "53": {
-            "gameid": "53",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 850,
-                    "loseScore": 150,
-                    "limitScore": 1020,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 3
-        "63": {
-            "gameid": "63",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 400000,
-                    "loseScore": 10000,
-                    "limitScore": 480000,
-                    "singleTick": 20
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 4
-        "65": {
-            "gameid": "65",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 250000,
-                    "loseScore": 25000,
-                    "limitScore": 264000,
-                    "singleTick": 100
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 5 
-        "67": {
-            "gameid": "67",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 100000,
-                    "loseScore": 10000,
-                    "limitScore": 110000,
-                    "singleTick": 200
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 6
-        "68": {
-            "gameid": "68",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 750000,
-                    "loseScore": 100000,
-                    "limitScore": 825000,
-                    "singleTick": 100
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 7
-        "84": {
-            "gameid": "84",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 250000,
-                    "loseScore": 20000,
-                    "limitScore": 275000,
-                    "singleTick": 5
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 8 
-        "86": {
-            "gameid": "86",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 100000,
-                    "loseScore": 15000,
-                    "limitScore": 120000,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 9
-        "121": {
-            "gameid": "121",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 10000,
-                    "loseScore": 1000,
-                    "limitScore": 11000,
-                    "singleTick": 50
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 10
-        "120": {
-            "gameid": "120",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 100000,
-                    "loseScore": 5000,
-                    "limitScore": 110000,
-                    "singleTick": 500
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 11
-        "117": {
-            "gameid": "117",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 200000,
-                    "loseScore": 20000,
-                    "limitScore": 220000,
-                    "singleTick": 10
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 12
-        "83": {
-            "gameid": "83",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 1000,
-                    "loseScore": 30,
-                    "limitScore": 1200,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 13
-        "236": {
-            "gameid": "236",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 60000,
-                    "loseScore": 5000,
-                    "limitScore": 72000,
-                    "singleTick": 20
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 14
-        "124": {
-            "gameid": "124",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 50,
-                    "loseScore": 10,
-                    "limitScore": 60,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 15
-        "335": {
-            "gameid": "335",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 4500,
-                    "loseScore": 300,
-                    "limitScore": 4950,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 16
-        "345": {
-            "gameid": "345",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 4000,
-                    "loseScore": 500,
-                    "limitScore": 4400,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 17
-        "355": {
-            "gameid": "355",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 2000,
-                    "loseScore": 400,
-                    "limitScore": 2200,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 18
-        "352": {
-            "gameid": "352",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 200,
-                    "loseScore": 50,
-                    "limitScore": 230,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 19
-        "393": {
-            "gameid": "393",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 3500,
-                    "loseScore": 300,
-                    "limitScore": 4200,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 20
-        "373": {
-            "gameid": "373",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 450,
-                    "loseScore": 25,
-                    "limitScore": 540,
-                    "singleTick": 5
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 21
-        "296": {
-            "gameid": "296",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 300,
-                    "loseScore": 40,
-                    "limitScore": 360,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 22
-        "325": {
-            "gameid": "325",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 12000,
-                    "loseScore": 6000,
-                    "limitScore": 14400,
-                    "singleTick": 20
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 23
-        "397": {
-            "gameid": "397",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 40000,
-                    "loseScore": 5000,
-                    "limitScore": 48000,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 24
-        "386": {
-            "gameid": "386",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 5000,
-                    "loseScore": 500,
-                    "limitScore": 5500,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 25
-        "392": {
-            "gameid": "392",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 800,
-                    "loseScore": 50,
-                    "limitScore": 960,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 26
-        "394": {
-            "gameid": "394",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 1000,
-                    "loseScore": 50,
-                    "limitScore": 1100,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 27
-        "404": {
-            "gameid": "404",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 350,
-                    "loseScore": 10,
-                    "limitScore": 420,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 28
-        "405": {
-            "gameid": "405",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 200,
-                    "loseScore": 20,
-                    "limitScore": 240,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 29
-        "375": {
-            "gameid": "375",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 100,
-                    "loseScore": 10,
-                    "limitScore": 110,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 30
-        "574": {
-            "gameid": "574",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 9380,
-                    "loseScore": 3200,
-                    "limitScore": 11256,
-                    "singleTick": 20
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
+            }
         },
         // 31
-        "573":{
-            gameid:"573",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[403],
-                    loseList:[0]
+        "573": {
+            gameid: "573",
+            scoreInfo: {
+                type: "pick",
+                scoreParam: {
+                    winList: [410],
+                    loseList: [0]
                 }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
+            }
         },
-        // 32
-        "577":{
-            gameid:"577",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[1260, 1264, 1268, 1270, 1274, 1278, 1280, 1284, 1288, 1290, 1294, 1298, 1300, 1304, 1308, 1310, 1314, 1318, 1320, 1324, 1328, 1330, 1334, 1338, 1340, 1344, 1348, 1350, 1354, 1358],
-                    loseList:[0,30]
+        "48": {
+            gameid: "48",
+            scoreInfo: {
+                type: "pick",
+                scoreParam: {
+                    winList: [300],
+                    loseList: [10, 20, 30, 40]
                 }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
+            }
         },
-        // 33
-        "597": {
-            "gameid": "597",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 10120,
-                    "loseScore": 5690,
-                    "limitScore": 11080,
-                    "singleTick": 10
+        "52": {
+            gameid: "52",
+            scoreInfo: {
+                type: "pick",
+                scoreParam: {
+                    winList: [27, 30],
+                    loseList: [0, 1, 2, 3, 4]
                 }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
+            }
         },
-        // 34
-        "575": {
-            "gameid": "575",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 40240,
-                    "loseScore": 26630,
-                    "limitScore": 48288,
-                    "singleTick": 1
+        // "410": {
+        //     gameid: "410",
+        //     scoreInfo: {
+        //         type: "interval",
+        //         scoreParam: {
+        //             winScore: 95,
+        //             loseScore: 70,
+        //             limitScore: 99,
+        //             singleTick: 1
+        //         }
+        //     }
+        // },
+        "460": {
+            gameid: "460",
+            scoreInfo: {
+                type: "pick",
+                scoreParam: {
+                    winList: [78],
+                    loseList: [18, 27, 36, 45, 54]
                 }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 35
-        "594":{
-            gameid:"594",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[52800],
-                    loseList:[8800,8700,8600,8500,8400,8300,8200,8100,8000,7900,7800,7700,7600,7500,7400,7300,7200,7100,7000,6900,6800,6700,6600,6500,6400,6300,6200,6100,6000]
-                }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
-        },
-        // 36
-        "585": {
-            "gameid": "585",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 4057980,
-                    "loseScore": 497420,
-                    "limitScore": 4869576,
-                    "singleTick": 10
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 37
-        "586":{
-            gameid:"586",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[1500],
-                    loseList:[0]
-                }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
-        },
-        // 38
-        "587": {
-            "gameid": "587",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 810580,
-                    "loseScore": 50450,
-                    "limitScore": 812542,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
-        },
-        // 39
-        "607": {
-            "gameid": "607",
-            "scoreInfo": {
-                "type": "interval",
-                "scoreParam": {
-                    "winScore": 6850,
-                    "loseScore": 200,
-                    "limitScore": 8220,
-                    "singleTick": 1
-                }
-            },
-            "operationSequence": [],
-            "saveDataTemplate": {}
+            }
         }
-    };
-
-    // some special game info, not in gameInfoDict
-    const specialGameInfoDict = {
-        "48":{
-            gameid:"48",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[300],
-                    loseList:[10,20,30,40]
-                }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
-        },
-        "52":{
-            gameid:"48",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[27,30],
-                    loseList:[0,1,2,3,4]
-                }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
-        },
-        "410":{
-            gameid:"410",
-            scoreInfo:{
-                type:"interval",
-                scoreParam:{
-                    winScore:95,
-                    loseScore:70,
-                    limitScore:99,
-                    singleTick:1
-                }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
-        },
-        "460":{
-            gameid:"460",
-            scoreInfo:{
-                type:"pick",
-                scoreParam:{
-                    winList:[78],
-                    loseList:[18,27,36,45,54]
-                }
-            },
-            operationSequence:[], // to be refined
-            saveDataTemplate:{} // to be refined
-        }
-    };
+    }
 
 
     // util functions
@@ -705,19 +108,18 @@
     }
     unsafeWindow.clearGMstorage = clearGMstorage;
 
-    let extractNumber = function(string){
-       return parseInt(string.replace(/[^0-9]/g, ""));
+    let extractNumber = function (string) {
+        return parseInt(string.replace(/[^0-9]/g, ""));
     }
-
 
     // this script functions
 
-    let isLogin = function(){
-        let logoutbtn = document.querySelector("div.c-logout__btn");
-        if (logoutbtn) {
-            return false;
-        } else {
+    let isLogin = function () {
+        let loginHallmark = document.querySelector("div.c-n-game-ranking-sec");
+        if (loginHallmark) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -728,7 +130,7 @@
     }
 
     // makeGameInfo function
-    let makeGameInfo = function(){
+    let makeGameInfo = function () {
         // use in game page
         // output template: 
         //{"0":{
@@ -742,115 +144,88 @@
         //             singleTick:100
         //         }
         //     },
-        //     operationSequence: [], // to be refined
-        //     saveDataTemplate:{} // to be refined
         // }
-        let findUpperLimit = function(targetScore,rankmax){
-            if(rankmax > 1.2*targetScore){
+        let findUpperLimit = function (targetScore, rankmax) {
+            if (rankmax > 1.2 * targetScore) {
                 // target score > 1.2 * max ranking score
-                return Math.floor(1.2*targetScore);
-            } else if(rankmax < targetScore) {
+                return Math.floor(1.2 * targetScore);
+            } else if (rankmax <= targetScore) {
                 // target score < max ranking score
-                return Math.floor(1.1*targetScore);
+                return targetScore;
             } else {
                 // target score < max ranking score < 1.2 * target score
                 return rankmax;
             }
         }
-        let findFactor = function(rankingArray){
-            let factorValueList = [500,250,200,100,50,25,20,10,5,2];     // not need 1, if all fail return 1
+        let findFactor = function (rankingArray) {
+            let factorValueList = [500, 250, 200, 100, 50, 25, 20, 10, 5, 2];     // not need 1, if all fail return 1
             let passCheckRatio = 0.8;
             for (let i = 0; i < factorValueList.length; i++) {
                 let notZeroCount = 0;
                 for (let j = 0; j < rankingArray.length; j++) {
-                    if (rankingArray[j] % factorValueList[i]){
+                    if (rankingArray[j] % factorValueList[i]) {
                         notZeroCount++;
                     }
                 }
-                if (notZeroCount <= rankingArray.length*(1-passCheckRatio)){
+                if (notZeroCount <= rankingArray.length * (1 - passCheckRatio)) {
                     return factorValueList[i];
                 }
             }
             return 1;
-        }; 
-        let extractRankingArray = function (rankingNodelist) {
-            let rankingArray = [
-                ...new Set(
-                Array.from(rankingNodelist, (node) => {
-                    const cleanString = node.textContent.replace(/[^0-9]/g, "");
-                    return parseInt(cleanString);
-                })
-                ),
-            ];
-            rankingArray = rankingArray.filter((item) => !Number.isNaN(item));
-            return rankingArray;
         };
+        let extractRankingArray = function (rankingNodelist) {
+            let rankingArray = [...new Set(Array.from(rankingNodelist, node => extractNumber(node.textContent)))];
+            rankingArray = rankingArray.filter(item => !Number.isNaN(item));
+            return rankingArray;
+        }
         let gameInfo = {};
         let gameid = getGameid(unsafeWindow.location.href);
-        let targetScoreNodeList = document.querySelectorAll(
-            "div.c-n-game-sec__body > ul.c-n-game-goal-score li.c-n-game-goal-score__score div"
-        );
-        const game_ranking = document.querySelectorAll(
-            "ul.c-n-game-ranking__l-list"
-        );
-        let rankingNodeList = [];
-        for (let i = 0; i < game_ranking.length; i++) {
-        rankingNodeList.push(
-            ...game_ranking[i].querySelectorAll("li > span:nth-of-type(2)")
-        );
-        }
-        let winScore = parseInt(extractNumber(targetScoreNodeList[0].textContent));
-        let loseScore = parseInt(extractNumber(targetScoreNodeList[3].textContent));
-        let rankingArray = extractRankingArray(rankingNodeList);
-        if(!targetScoreNodeList || rankingArray.length == 0){
+        let targetScoreNodeList = document.querySelectorAll("div.c-n-game-sec__body > ul.c-n-game-goal-score > li.c-n-game-goal-score__score > div");
+        if (!targetScoreNodeList) {
             throw Error("Get game page error");
-        } else {
-            let rankingMax = Math.max(...rankingArray);
-            let limitScore = findUpperLimit(winScore,rankingMax);
-            let singleTick = findFactor(rankingArray);
-            gameInfo[gameid] = {
-                gameid:gameid,
-                scoreInfo:{
-                    type:"interval",
-                    scoreParam:{
-                        winScore:winScore,
-                        loseScore:loseScore,
-                        limitScore:limitScore,
-                        singleTick:singleTick
-                    }
-                },
-                operationSequence:[], // to be refined
-                saveDataTemplate:{} // to be refined
-            };
-            return gameInfo;
         }
+        let rankingNodeList = document.querySelectorAll("div.c-n-game-ranking-sec > div.c-n-game-ranking > ul.c-n-game-ranking__l-list > li.c-n-game-ranking__list > span.c-n-game-ranking__score");
+        let winScore = extractNumber(targetScoreNodeList[0].textContent);
+        let loseScore = extractNumber(targetScoreNodeList[3].textContent);
+        let rankingMax = 0;
+        let singleTick = 0;
+        let rankingArray = [];
+        if (rankingNodeList.length > 0) {
+            rankingArray = extractRankingArray(rankingNodeList);
+            rankingMax = Math.max(...rankingArray);
+            singleTick = findFactor(rankingArray);
+        } else {
+            rankingMax = winScore;
+            singleTick = 1;
+        }
+        // if (gameid in gameInfoDict){
+        //     singleTick = gameInfoDict[gameid].scoreInfo.scoreParam.singleTick;
+        // }
+        let limitScore = findUpperLimit(winScore, rankingMax);
+        gameInfo[gameid] = {
+            gameid: gameid,
+            scoreInfo: {
+                type: "interval",
+                scoreParam: {
+                    winScore: winScore,
+                    loseScore: loseScore,
+                    limitScore: limitScore,
+                    singleTick: singleTick
+                }
+            }
+        };
+        return gameInfo;
     }
     unsafeWindow.makeGameInfo = makeGameInfo; // for debug
 
-    let getGameInfo = function(gameid){
-        // check if gameid is in gameInfoDict or specialGameInfoDict
-        // return gameInfoDict[gameid] or specialGameInfoDict[gameid] or null
-        if(gameid in gameInfoDict){
-            return gameInfoDict[gameid];
-        } else if(gameid in specialGameInfoDict){
-            return specialGameInfoDict[gameid];
-        } else{
-            // if gameid not in gameInfoDict or GM storage, return null
-            return GM_getValue("gameInfo"+gameid,null);
-        }
-    }
-
-    let saveGameInfo = function(gameid,gameInfo){
-        // save gameInfo to GM storage
-        GM_setValue("gameInfo"+gameid,gameInfo);
-        return;
-    }
-
-    let makeRandomScore = function(scoreInfo,outcome){
+    let makeRandomScore = function (scoreInfo, outcome) {
         // generate random score based on scoreParam
         // outcome: "win" or "lose"
-        let randomValueFromInterval = function(lowerBound,upperBound,singleTick){
-            if(singleTick == 1){
+        let randomValueFromInterval = function (lowerBound, upperBound, singleTick) {
+            if (lowerBound == upperBound) {
+                return lowerBound;
+            }
+            if (singleTick == 1) {
                 return lowerBound + Math.floor((upperBound - lowerBound) * Math.random());
             } else {
                 let minMultiplier = Math.ceil(lowerBound / singleTick);
@@ -859,25 +234,25 @@
                 return multiplier * singleTick;
             }
         }
-        let pickFromList = function(list){
+        let pickFromList = function (list) {
             let index = Math.floor(list.length * Math.random());
             return list[index];
         }
-        if(scoreInfo.type == "interval"){
+        if (scoreInfo.type == "interval") {
             // interval
-            if(outcome == "win"){
+            if (outcome == "win") {
                 // win
-                return randomValueFromInterval(scoreInfo.scoreParam.winScore,scoreInfo.scoreParam.limitScore,scoreInfo.scoreParam.singleTick);
-            } else if(outcome == "lose"){
+                return randomValueFromInterval(scoreInfo.scoreParam.winScore, scoreInfo.scoreParam.limitScore, scoreInfo.scoreParam.singleTick);
+            } else if (outcome == "lose") {
                 // lose
-                return randomValueFromInterval(0,scoreInfo.scoreParam.loseScore,scoreInfo.scoreParam.singleTick);
+                return randomValueFromInterval(0, scoreInfo.scoreParam.loseScore, scoreInfo.scoreParam.singleTick);
             }
-        } else if(scoreInfo.type == "pick"){
+        } else if (scoreInfo.type == "pick") {
             // pick
-            if(outcome == "win"){
+            if (outcome == "win") {
                 // win
                 return pickFromList(scoreInfo.scoreParam.winList);
-            } else if(outcome == "lose"){
+            } else if (outcome == "lose") {
                 // lose
                 return pickFromList(scoreInfo.scoreParam.loseList);
             }
@@ -887,57 +262,59 @@
         }
     }
 
-    function customSendScore(gameid, outcome) {
-    const originalAjax = $.ajax;
-
-    $.ajax = function (...args) {
-      const options = args[0] || {};
-      const requestUrl = options.url || "";
-      if (
-        requestUrl.includes("/finish.json") &&
-        options.data &&
-        typeof options.data.score !== "undefined"
-      ) {
-        let gameInfo = getGameInfo(gameid);
-        // console.log("Game info", gameInfo);
-        if (gameInfo == null) {
-          gameInfo = makeGameInfo()[gameid];
-          saveGameInfo(gameid, gameInfo);
+    let hookEasygameGetReward = function(){
+        const _getReward = unsafeWindow.easygame.getReward;
+        unsafeWindow.easygame.getReward = function(){
+            console.log('I dont watch Ads but get Ads reward');
+            return _getReward.apply(this, [true, false]);
         }
-        const score = makeRandomScore(gameInfo.scoreInfo, outcome);
-        // console.log("New Score", score);
-        options.data.score = score;
-        const shaObj = new jsSHA("SHA-1", "TEXT");
-        const hashString =
-          options.data.user_id +
-          options.data.media_id +
-          options.data.game_id +
-          options.data.score +
-          options.data.key;
-        shaObj.update(hashString);
-        options.data.hash = shaObj.getHash("HEX");
-      }
+    }
 
-      return originalAjax.apply(this, args);
-    };
-  }
+
+    // contributed by tvone
+    let hookAjaxFinishScore = function (gameid, outcome) {
+        const originalAjax = $.ajax;
+
+        $.ajax = function (...args) {
+            const options = args[0] || {};
+            const requestUrl = options.url || "";
+            if (
+                requestUrl.includes("/finish.json") &&
+                options.data &&
+                typeof options.data.score !== "undefined"
+            ) {
+                let gameInfo;
+                if (gameid in typePickGameInfoDict) {
+                    gameInfo = typePickGameInfoDict[gameid];
+                } else {
+                    gameInfo = makeGameInfo()[gameid];
+                }
+                const score = makeRandomScore(gameInfo.scoreInfo, outcome);
+                // console.log("New Score", score);
+                options.data.score = score;
+                const shaObj = new jsSHA("SHA-1", "TEXT");
+                const hashString =
+                    options.data.user_id +
+                    options.data.media_id +
+                    options.data.game_id +
+                    options.data.score +
+                    options.data.key;
+                shaObj.update(hashString);
+                options.data.hash = shaObj.getHash("HEX");
+            }
+
+            return originalAjax.apply(this, args);
+        };
+    }
+
 
     // main func
 
     let main = async function(){
         console.log("game page main func");
         let currentGameid = getGameid(unsafeWindow.location.href);
-
-        // let removeGameAd = function(){
-        //     let gameAd = document.querySelector("#mainContainer");
-        //     if (gameAd){
-        //         gameAd.remove();
-        //     }
-        //     return;
-        // }
-        // removeGameAd();
-
-        customSendScore(currentGameid,"win");
+        hookAjaxFinishScore(currentGameid, "win");
+        hookEasygameGetReward();
         return;
     }
     
@@ -947,12 +324,9 @@
 
     if (currentURL.hostname == "pointclub.kantangame.com") {
         if (gamePagePathRE.test(currentURL.pathname)) {
-            console.log("this is game page");
             if (isLogin()){
-                console.log("game page login")
+                console.log("this is game page");
                 main();
-            } else {
-                console.log("game page not login")
             }
         }
     }
