@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DMM Kantangame Wool Lite
 // @namespace    https://www.youtube.com/watch?v=dQw4w9WgXcQ
-// @version      beta-1.1.0
+// @version      beta-1.1.1
 // @description  Always win DMM Kantangame game, score number is automatically generated and statistically reasonable
 // @author       Pandamon
 // @match        https://pointclub.kantangame.com/easygame/game/*
@@ -184,7 +184,7 @@
         if (!targetScoreNodeList) {
             throw Error("Get game page error");
         }
-        let rankingNodeList = document.querySelectorAll("div.c-n-game-ranking-sec > div.c-n-game-ranking > ul.c-n-game-ranking__l-list > li.c-n-game-ranking__list > span.c-n-game-ranking__score");
+        let rankingNodeList = document.querySelectorAll("div.c-n-game-ranking > ul.c-n-game-ranking__l-list > li.c-n-game-ranking__list > span.c-n-game-ranking__score");
         let winScore = extractNumber(targetScoreNodeList[0].textContent);
         let loseScore = extractNumber(targetScoreNodeList[3].textContent);
         let rankingMax = 0;
