@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DMM Kantangame Wool Lite
 // @namespace    https://www.youtube.com/watch?v=dQw4w9WgXcQ
-// @version      beta-1.1.1
+// @version      beta-1.1.2
 // @description  Always win DMM Kantangame game, score number is automatically generated and statistically reasonable
 // @author       Pandamon
 // @match        https://pointclub.kantangame.com/easygame/game/*
@@ -270,6 +270,15 @@
         }
     }
 
+    let noAdsEasygameHealing = function(){
+        $(easygame.gameHealingBtn).off('click');
+        $(easygame.gameHealingBtn).on('click', function () {
+            $(easygame.gameHealingBtn).hide();
+            console.log('I dont watch Ads but get healing')
+            easygame.healing();
+        });
+    }
+
 
     // contributed by tvone
     let hookAjaxFinishScore = function (gameid, outcome) {
@@ -315,6 +324,7 @@
         let currentGameid = getGameid(unsafeWindow.location.href);
         hookAjaxFinishScore(currentGameid, "win");
         hookEasygameGetReward();
+        noAdsEasygameHealing();
         return;
     }
     
